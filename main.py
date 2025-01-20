@@ -1,20 +1,45 @@
 import requests
+import json
 
-
-def main():
-    token = input('Enter Token address: ')
-
+def fetchCoin(token):
     r = requests.get(f'https://api.dexscreener.com/tokens/v1/solana/{token}')
+
+    if len(r.json()) == 0:
+        return False
+    
     data = r.json()[0]
 
-    coinName = data['baseToken']['symbol']
-    marketCap = data['marketCap']
+    return data['baseToken']['symbol'], data['marketCap'], data['priceNative'], data['priceUsd']
 
-    priceSol = data['priceNative']
-    priceUSD = data['priceUsd']
+def main():
+    while True:
+        token = input('Enter Token address: ')
 
-    print(f'\n\n{coinName}\n{token}\n\nMarketCap: {marketCap}\nPrice: {priceUSD}')
-    
+        coinData = fetchCoin(token)
+
+        if coinData == False:
+            print("Coin not found, please try again\n")
+            continue
+
+        coinName = coinData[0]
+        marketCap = coinData[1]
+
+        priceSol = coinData[2]
+        priceUSD = coinData[3]
+
+        print(f'\n\n{coinName}\n{token}\n\nMarketCap: {marketCap}\nPrice: {priceUSD} USD\n\n')
+
  
 if __name__ == '__main__':
     main()
+
+
+
+"""
+plan
+
+get coin info - done
+buy sell conversions and stuff
+positions system
+
+"""
