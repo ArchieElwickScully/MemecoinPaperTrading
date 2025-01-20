@@ -1,6 +1,22 @@
 import requests
 import json
 
+class Wallet:
+    def __init__(self):
+        with open('config.json') as f:
+            config = json.load(f)
+
+            self.balance = config['balance']
+
+            self.buyFee = config['fees']['buy']['fee']
+            self.buyTip = config['fees']['buy']['tip']
+
+            self.sellFee = config['fees']['sell']['fee']
+            self.sellTip = config['fees']['sell']['tip']
+            
+        with open('positions.json') as f:
+            self.positions = json.load(f)
+
 def fetchCoin(token):
     r = requests.get(f'https://api.dexscreener.com/tokens/v1/solana/{token}')
 
@@ -12,13 +28,21 @@ def fetchCoin(token):
     return data['baseToken']['symbol'], data['marketCap'], data['priceNative'], data['priceUsd']
 
 def main():
+    wallet = Wallet()
+
     while True:
+        bal = f'Balance: ${wallet.balance}'
+
+        print("\n" + "=" * len(bal))
+        print(bal)
+        print("=" * len(bal) + "\n")
+
         token = input('Enter Token address: ')
 
         coinData = fetchCoin(token)
 
         if coinData == False:
-            print("Coin not found, please try again\n")
+            print('Coin not found, please try again\n')
             continue
 
         coinName = coinData[0]
@@ -35,11 +59,19 @@ if __name__ == '__main__':
 
 
 
-"""
+'''
 plan
 
 get coin info - done
 buy sell conversions and stuff
 positions system
 
-"""
+positions system
+json file
+layout
+
+coin : coin
+amount : amount
+marketcapAtBuy: mc
+
+'''
