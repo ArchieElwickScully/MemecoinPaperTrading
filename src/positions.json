@@ -1,14 +1,1 @@
-[
-  {
-    "coin": "Musk",
-    "ca" : "8EgjZcSwBFUKtQRxdkKGNDZBQ5m6Gtnj5tGKsXTepump",
-    "mc" : 100000,
-    "coins" : 69
-  },
-  {
-    "coin": "Trump",
-    "ca" : "6p6xgHyF7AeE6TZkSmFsko444wqoP15icUSqi2jfGiPN",
-    "mc" : 1000000000,
-    "coins" : 420
-  }
-]
+[{"coin": "Musk", "ca": "8EgjZcSwBFUKtQRxdkKGNDZBQ5m6Gtnj5tGKsXTepump", "mc": 100000, "coins": 69}, {"coin": "Trump", "ca": "6p6xgHyF7AeE6TZkSmFsko444wqoP15icUSqi2jfGiPN", "mc": 1000000000, "coins": 420}, {"coin": "ZUCKERBERG", "ca": "C2vADESvLxhMdVBHDFY4E7ShFxEnuPtjbaZ7HdwHpump", "mc": 892055.0, "coins": 53267.43547501373}]
