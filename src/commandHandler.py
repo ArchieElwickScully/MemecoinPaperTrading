@@ -4,7 +4,7 @@ from api2 import fetchCoin
 class CommandHandler:
     def __init__(self, wallet):
         self.tokenCommands = {'b': self.buy, 's': 'none', 'p': self.handlePosition, 'e': 'none'}
-        self.positioncCommands = {'s' : '', 'e' : 'none'}
+        self.positioncCommands = {'s' : self.sell, 'e' : 'none'}
 
         self.wallet = wallet
         self.commandDisplay = 'buy - buy the coin\nsell - sell your position\np - check for active positions\ne - exit\n'
@@ -74,7 +74,7 @@ class CommandHandler:
             if command == 'e':
                 break
 
-            self.tokenCommands[command](ca)
+            self.positioncCommands[command](ca)
 
     def buy(self, ca):
         amount = input('Enter sol amount to buy: ')
@@ -87,3 +87,11 @@ class CommandHandler:
         self.wallet.createPosition(ca, final)
 
         print('position opened')
+
+    def sell(self, ca):
+        percent = input('Enter percent of position to sell: ')
+
+        if not self.wallet.validateNumber(percent):
+            return
+
+        self.wallet.sellPosition(ca, percent)

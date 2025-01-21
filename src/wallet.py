@@ -21,14 +21,21 @@ class Wallet:
         with open('positions.json') as f:
             self.positions = json.load(f)
 
-    def checkBalance(self, amount):
+    def validateNumber(self, n):
         try:
-            float(amount)
+            float(n)
         except (ValueError, TypeError):
             print('Please enter a valid number')
             return False
 
+        return True
+
+    def checkBalance(self, amount):
+        if not self.validateNumber(amount):
+            return False
+
         finalAmount = (float(amount) - self.buyFee) - self.buyTip
+        finalAmount = finalAmount - (finalAmount * (self.takePercent/100))
 
         if float(finalAmount) > self.balance:
             print("balance too low")
@@ -36,12 +43,31 @@ class Wallet:
 
         return finalAmount
 
+    def updateBalance(self, balance):
+        with open('config.json') as f:
+            config = json.load(f)
+
+        config['balance'] = balance
+
+        with open('config.json', 'w') as f:
+            json.dump(config, f)
+
     def getPosition(self, ca):
         for position in self.positions:
             if position['ca'] == ca:
                 return position
 
         return False
+
+    def updatePosition(self, pos, newpos):
+        if float(newpos['coins']) == 0:
+            self.positions.remove(pos)
+        else:
+            i = self.positions.index(pos)
+            self.positions[i] = newpos
+
+        with open('positions.json', 'w') as f:
+            json.dump(self.positions, f)
 
     def createPosition(self, ca, sol):
         coinData = fetchCoin(ca)
@@ -57,8 +83,41 @@ class Wallet:
         self.positions.append(pos)
 
         self.balance -= sol
+        self.updateBalance(self.balance)
 
         with open('positions.json', 'w') as f:
             json.dump(self.positions, f)
 
         print(f'\nbought {sol} sol of ${coinName}')
+
+    def sellPosition(self, ca, percent):
+        coinData = fetchCoin(ca)
+        positionData = self.getPosition(ca)
+
+        marketCap = float(coinData[1])
+        priceSol = float(coinData[2])
+
+        posMarketCap = float(positionData['mc'])
+        posBalance = float(positionData['coins'])
+        posName = positionData['coin']
+
+        sellCoins = posBalance * (float(percent) / 100)
+
+        posBalance = posBalance - sellCoins
+        # when balance falls below 0 remove position add later
+
+        sol = sellCoins * priceSol
+        self.balance += sol
+        self.updateBalance(self.balance)
+
+        pos = {'coin': posName, 'ca': ca, 'mc': marketCap, 'coins': posBalance}
+        self.updatePosition(positionData, pos)
+
+        print(f'\n{sellCoins} ${posName} sold, +{sol} sol')
+
+
+
+''''
+when opening position we create an initial sol value
+when this position balance falls below 0 we calculate the pnl
+'''

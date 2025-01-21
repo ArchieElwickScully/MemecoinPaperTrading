@@ -10,6 +10,3 @@ def fetchCoin(token):
     data = r.json()
 
     return data['data']['symbol'], data['data']['marketCap'], data['data']['priceSol'], data['data']['price']
-
-
-print(fetchCoin('nut'))

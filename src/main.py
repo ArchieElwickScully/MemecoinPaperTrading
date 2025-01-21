@@ -51,6 +51,8 @@ positions system
 json file
 layout
 
+pnl system
+
 coin : coin
 amount : amount
 marketcapAtBuy: mc
@@ -65,5 +67,9 @@ solana worth
 marketcap at bought
 current marketcap
 increase
+
+TODO
+make charge broker fee
+add delay to transactions based on fees
 
 '''
