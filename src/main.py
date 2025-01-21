@@ -1,6 +1,6 @@
-from src.api import fetchCoin
-from src.commandHandler import CommandHandler
-from src.wallet import Wallet
+from api import fetchCoin
+from commandHandler import CommandHandler
+from wallet import Wallet
 
 wallet = Wallet()
 
@@ -36,8 +36,6 @@ def main():
         if displayCoin(ca):
             COMMANDHANDLER.handleToken(ca)
 
-        print(wallet.positions)
-
  
 if __name__ == '__main__':
     main()
@@ -58,5 +56,16 @@ layout
 coin : coin
 amount : amount
 marketcapAtBuy: mc
+
+
+displatying positions
+
+Token name
+tokens
+solana worth
+
+marketcap at bought
+current marketcap
+increase
 
 '''

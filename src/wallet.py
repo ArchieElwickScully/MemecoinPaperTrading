@@ -1,6 +1,6 @@
 import json
 
-from src.api import fetchCoin
+from api import fetchCoin
 
 
 class Wallet:

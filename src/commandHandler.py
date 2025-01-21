@@ -1,16 +1,49 @@
+from api import fetchCoin
+
+
 class CommandHandler:
     def __init__(self, wallet):
-        self.tokenCommands = {'buy': self.buy, 'sell': 'none', 'p': self.openPosition, 'e': 'none'}
-        self.positioncCommand = ['sell']
+        self.tokenCommands = {'buy': self.buy, 'sell': 'none', 'p': self.handlePosition, 'e': 'none'}
+        self.positioncCommands = {'sell' : '', 'e' : 'none'}
 
         self.wallet = wallet
         self.commandDisplay = 'buy - buy the coin\nsell - sell your position\np - check for active positions\ne - exit\n'
+
+
+    def displayPosition(self, ca, pos):
+        #get tokens current mc etc
+        coinData = fetchCoin(ca)
+
+        if not coinData:
+            print('Coin data could not be retreived, this should not happen unless the api is down '
+                  'or you manually edited the ca in the positions file, if you manage to see this '
+                  'good job i suck at coding\n')
+            return False
+
+        coinName = coinData[0]
+        marketCap = float(coinData[1])
+        priceSol = float(coinData[2])
+        priceUSD = float(coinData[3])
+
+        coins = float(pos['coins'])
+        mcAtBuy = float(pos['mc'])
+
+        increase = ((marketCap - mcAtBuy) / mcAtBuy) * 100
+        worthusd = coins * priceUSD
+        worthsol = coins* priceSol
+
+        print(f'\n{coins} ${coinName}')
+        print(f'marketcap bought: {mcAtBuy}')
+        print(f'marketcap current: {marketCap}')
+        print(f'increase: {increase}%')
+        print(f'worth: ${worthusd}')
+        print(f'worth: {worthsol} Sol')
 
     def handleToken(self, ca):
         command = ''
 
         while command != 'e':
-            print(self.commandDisplay)
+            #print(self.commandDisplay)
             command = input('Enter command for token: ')
 
             if command not in self.tokenCommands:
@@ -19,12 +52,25 @@ class CommandHandler:
 
             self.tokenCommands[command](ca)
 
-    def openPosition(self, ca):
+    def handlePosition(self, ca):
         pos = self.wallet.getPosition(ca)
 
         if not pos:
             print('position not found\n')
             return
+
+        self.displayPosition(ca, pos)
+
+        command = ''
+
+        while command != 'e':
+            command = input('Enter command for token: ')
+
+            if command not in self.positioncCommands:
+                self.displayPosition(ca, pos)
+                continue
+
+            self.tokenCommands[command](ca)
 
     def buy(self, ca):
         amount = input('Enter sol amount to buy: ')
