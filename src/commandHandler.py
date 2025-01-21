@@ -1,10 +1,10 @@
-from api import fetchCoin
+from api2 import fetchCoin
 
 
 class CommandHandler:
     def __init__(self, wallet):
-        self.tokenCommands = {'buy': self.buy, 'sell': 'none', 'p': self.handlePosition, 'e': 'none'}
-        self.positioncCommands = {'sell' : '', 'e' : 'none'}
+        self.tokenCommands = {'b': self.buy, 's': 'none', 'p': self.handlePosition, 'e': 'none'}
+        self.positioncCommands = {'s' : '', 'e' : 'none'}
 
         self.wallet = wallet
         self.commandDisplay = 'buy - buy the coin\nsell - sell your position\np - check for active positions\ne - exit\n'
@@ -32,23 +32,26 @@ class CommandHandler:
         worthusd = coins * priceUSD
         worthsol = coins* priceSol
 
-        print(f'\n{coins} ${coinName}')
+        print('\n' + '=' * 20)
+        print(f'{coins} ${coinName}')
         print(f'marketcap bought: {mcAtBuy}')
-        print(f'marketcap current: {marketCap}')
+        print(f'marketcap current: {marketCap}\n')
         print(f'increase: {increase}%')
         print(f'worth: ${worthusd}')
         print(f'worth: {worthsol} Sol')
+        print('=' * 20 + '\n')
 
     def handleToken(self, ca):
-        command = ''
-
-        while command != 'e':
+        while True:
             #print(self.commandDisplay)
-            command = input('Enter command for token: ')
+            command = input('\nEnter command for token: ')
 
             if command not in self.tokenCommands:
                 print("Command not recognised, please try again\n")
                 continue
+
+            if command == 'e':
+                break
 
             self.tokenCommands[command](ca)
 
@@ -61,14 +64,15 @@ class CommandHandler:
 
         self.displayPosition(ca, pos)
 
-        command = ''
-
-        while command != 'e':
-            command = input('Enter command for token: ')
+        while True:
+            command = input('\nEnter command for position: ')
 
             if command not in self.positioncCommands:
                 self.displayPosition(ca, pos)
                 continue
+
+            if command == 'e':
+                break
 
             self.tokenCommands[command](ca)
 

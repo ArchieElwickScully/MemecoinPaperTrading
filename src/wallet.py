@@ -1,6 +1,6 @@
 import json
 
-from api import fetchCoin
+from api2 import fetchCoin
 
 
 class Wallet:
@@ -34,8 +34,7 @@ class Wallet:
             print("balance too low")
             return False
 
-        return True
-
+        return finalAmount
 
     def getPosition(self, ca):
         for position in self.positions:
@@ -61,3 +60,5 @@ class Wallet:
 
         with open('positions.json', 'w') as f:
             json.dump(self.positions, f)
+
+        print(f'\nbought {sol} sol of ${coinName}')

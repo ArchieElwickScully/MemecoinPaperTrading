@@ -1,4 +1,4 @@
-from api import fetchCoin
+from api2 import fetchCoin
 from commandHandler import CommandHandler
 from wallet import Wallet
 
@@ -36,11 +36,9 @@ def main():
         if displayCoin(ca):
             COMMANDHANDLER.handleToken(ca)
 
- 
+
 if __name__ == '__main__':
     main()
-
-
 
 '''
 plan
