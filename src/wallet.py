@@ -71,10 +71,8 @@ class Wallet:
 
     def createPosition(self, ca, sol):
         coinData = fetchCoin(ca)
-
         coinName = coinData[0]
         marketCap = float(coinData[1])
-
         priceSol = float(coinData[2])
 
         amount = float(sol) / priceSol
@@ -120,4 +118,6 @@ class Wallet:
 ''''
 when opening position we create an initial sol value
 when this position balance falls below 0 we calculate the pnl
+
+add charge fees
 '''
