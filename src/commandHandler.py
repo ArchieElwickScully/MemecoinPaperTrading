@@ -27,8 +27,11 @@ class CommandHandler:
 
         coins = float(pos['coins'])
         mcAtBuy = float(pos['mc'])
+        boughtSol = float(pos['sol'])
 
         increase = ((marketCap - mcAtBuy) / mcAtBuy) * 100
+        solIncrease = boughtSol * (increase/100)
+
         worthusd = coins * priceUSD
         worthsol = coins* priceSol
 
@@ -36,9 +39,10 @@ class CommandHandler:
         print(f'{coins} ${coinName}')
         print(f'marketcap bought: {mcAtBuy}')
         print(f'marketcap current: {marketCap}\n')
-        print(f'increase: {increase}%')
+        print(f'increase: {increase}% (+{solIncrease} Sol)')
         print(f'worth: ${worthusd}')
         print(f'worth: {worthsol} Sol')
+        print(f'bought: {boughtSol}')
         print('=' * 20 + '\n')
 
     def handleToken(self, ca):
@@ -79,7 +83,7 @@ class CommandHandler:
     def buy(self, ca):
         amount = input('Enter sol amount to buy: ')
 
-        final = self.wallet.checkBalance(amount)
+        final = self.wallet.checkBalance(amount, 'b')
 
         if not final:
             return

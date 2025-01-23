@@ -30,12 +30,23 @@ class Wallet:
 
         return True
 
-    def checkBalance(self, amount):
+    def chargeFees(self, sol, o):
+        if o == 'b':
+            fee, tip = self.buyFee, self.buyTip
+        else:
+            fee, tip = self.sellFee, self.sellTip
+
+        finalAmount = (float(sol) - fee) - tip
+        finalAmount = finalAmount - (finalAmount * (self.takePercent / 100))
+
+        return finalAmount
+
+
+    def checkBalance(self, amount, o):
         if not self.validateNumber(amount):
             return False
 
-        finalAmount = (float(amount) - self.buyFee) - self.buyTip
-        finalAmount = finalAmount - (finalAmount * (self.takePercent/100))
+        finalAmount = self.chargeFees(amount, o)
 
         if float(finalAmount) > self.balance:
             print("balance too low")
@@ -77,7 +88,7 @@ class Wallet:
 
         amount = float(sol) / priceSol
 
-        pos = {'coin': coinName, 'ca': ca, 'mc': marketCap, 'coins': amount}
+        pos = {'coin': coinName, 'ca': ca, 'mc': marketCap, 'sol' : sol, 'coins': amount}
         self.positions.append(pos)
 
         self.balance -= sol
@@ -97,7 +108,11 @@ class Wallet:
 
         posMarketCap = float(positionData['mc'])
         posBalance = float(positionData['coins'])
+        posSol = float(positionData['sol'])
         posName = positionData['coin']
+
+        increase = ((marketCap - posMarketCap) / posMarketCap) * 100
+        solIncrease = posSol * (increase/100)
 
         sellCoins = posBalance * (float(percent) / 100)
 
@@ -105,13 +120,15 @@ class Wallet:
         # when balance falls below 0 remove position add later
 
         sol = sellCoins * priceSol
-        self.balance += sol
+        finalSol = self.chargeFees(sol, 's')
+
+        self.balance += finalSol
         self.updateBalance(self.balance)
 
-        pos = {'coin': posName, 'ca': ca, 'mc': marketCap, 'coins': posBalance}
+        pos = {'coin': posName, 'ca': ca, 'mc': marketCap, 'sol' : posSol, 'coins': posBalance}
         self.updatePosition(positionData, pos)
 
-        print(f'\n{sellCoins} ${posName} sold, +{sol} sol')
+        print(f'\n{sellCoins} ${posName} sold for an increase of {increase}, {solIncrease} sol increase')
 
 
 
